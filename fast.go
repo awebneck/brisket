@@ -110,7 +110,8 @@ func (f *fast) findKeypoints() {
     }
   }
   // Non-maximum suppression. Could be made more efficient, but eh,
-  // I'll worry about it later
+  // I'll worry about it later. Looks up scores in the scoreMap field
+  // and ensures that the keypoint in question is the local maximum.
   unsuppressedKeypoints := make([]*image.Point, 0, 2)
   for i := 0; i < len(f.keypoints); i++ {
     kp := f.keypoints[i]
@@ -148,6 +149,7 @@ func (f *fast) scanContiguous(comp, value, d uint8, thr, x, y int) (bool) {
           k := new(image.Point)
           k.X = x
           k.Y = y
+          // Calculate the score and add it to the scoremap
           f.scoreMap[x][y] = f.calculateScore(value, x, y)
           f.keypoints = append(f.keypoints, k)
           return true
