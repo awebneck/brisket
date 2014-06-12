@@ -5,6 +5,7 @@ import (
   "os"
   "strconv"
   "image/jpeg"
+  "image/png"
   "github.com/awebneck/brisket"
 )
 
@@ -18,7 +19,8 @@ func main() {
 
 func run() (int, error) {
   filename := os.Args[1]
-  thresh, err := strconv.ParseInt(os.Args[2], 10, 8)
+  thresh64, err := strconv.Atoi(os.Args[2])
+  thresh := uint8(thresh64)
   if err != nil {
     return 1, err
   }
@@ -27,10 +29,19 @@ func run() (int, error) {
   img, err := jpeg.Decode(filedata)
   fmt.Printf("Image Size: %d x %d\n", img.Bounds().Max.X, img.Bounds().Max.Y)
   fmt.Printf("Converting...\n")
-  img = brisket.ConvertToGrayscale(img)
+  gray := brisket.ConvertToGrayscale(img)
   fmt.Printf("Converted To Grayscale\n")
-  // nfile, err := os.Create("gray.jpg")
-  // jpeg.Encode(nfile, img, nil)
+  fast := brisket.NewFastFromGray(gray, thresh)
+  fmt.Printf("Keypoints Calculated, Rendering Final\n")
+  final := fast.RenderKeypoints()
+  nfile, err := os.Create("final.png")
+  png.Encode(nfile, final)
+  nfile.Close()
+  fmt.Printf("Rendering Final Keypoints Only\n")
+  finalkponly := fast.RenderKeypointsOnly()
+  nfile, err = os.Create("final-kponly.png")
+  png.Encode(nfile, finalkponly)
+  nfile.Close()
   if err != nil {
     return 1, err
   }
