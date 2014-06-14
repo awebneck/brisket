@@ -16,7 +16,7 @@ func NewOctave(pyr *pyramid, scale float64, thresh uint8) (*octave, error) {
   // Need to scale image first
   oct.image = pyr.image
   oct.scale = scale
-  oct.fast = NewFast(oct, thresh)
+  oct.fast = NewFast(oct, thresh, PatternSize9_16)
   return oct, nil
 }
 
@@ -25,6 +25,6 @@ func NewOctaveFromGray(gray *image.Gray, scale float64, thresh uint8) (*octave, 
   // Need to scale image first
   oct.image = gray
   oct.scale = scale
-  oct.fast = NewFast(oct, thresh)
+  oct.fast = NewFast(oct, thresh, PatternSize9_16)
   return oct, nil
 }

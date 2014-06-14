@@ -31,7 +31,7 @@ func run() (int, error) {
   fmt.Printf("Converting...\n")
   gray := brisket.ConvertToGrayscale(img)
   fmt.Printf("Converted To Grayscale\n")
-  fast := brisket.NewFastFromGray(gray, thresh)
+  fast := brisket.NewFastFromGray(gray, thresh, brisket.PatternSize9_16)
   fmt.Printf("Keypoints Calculated, Rendering Final\n")
   final := fast.RenderKeypoints()
   nfile, err := os.Create("final.png")
